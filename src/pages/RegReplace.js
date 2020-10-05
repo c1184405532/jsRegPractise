@@ -40,6 +40,33 @@ function RegReplace(){
         // 以字母 或者 数字 或中文字符开始 字符长度为3-6位
         setUserName(e.target.value)
     };
+    function manyString(){
+        let str = `
+            #1 js,200元#
+            # 2 node.js,500元#
+
+            # 3 php,800元#
+            # 4 www.baidu.com# 123
+        `
+        
+       
+        let result = str.match(/^\s*#\s*\d+\s*.+\s*#$/gm).map(v =>{
+            v = v.replace(/\s*#\s*\d+\s*/,'').replace(/#/,'')
+            let [name,price] = v.split(',');
+            return {
+                name,
+                price
+            }
+        })
+        return result
+    }
+    function regDate(){
+        let str = `2020-10-05`
+        //\1 代表匹配的是前面一个原子组的匹配结果为真时的匹配 
+        //比如 前一个匹配到-那么后面也必须是- 不能是2020-10/05 这种结构 如果不用\1那么-\都可以组合匹配
+        let reg = /^\d{4}([-\/])\d{2}\1\d{2}$/
+        return str.match(reg) && str.match(reg)[0]
+    }
     return (
         <div>
             <h4>输入检测的字符或者正则高亮显示匹配</h4>
@@ -50,8 +77,13 @@ function RegReplace(){
             </p>
             <h4>匹配电话号 010-9999999 {tel('010-9999999').toString()}</h4>
             <h4>匹配浏览器地址 https://www.baidu.com {url('https://www.baidu.com').toString()}</h4>
-            <h4>输入用户名检测是否匹配 （由字母数字或中文组成的3-6位用户名）  {userName.match(/^(\w|\d|[\u4e00-\u9fa5]){3,6}$/)?'匹配':'不匹配'}  </h4>
+            <h4>输入用户名检测是否匹配 （由字母数字或中文组成的2-6位用户名）  {userName.match(/^(\w|\d|[\u4e00-\u9fa5]){2,6}$/)?'匹配':'不匹配'}  </h4>
             <input type="text"  onInput={(e)=>{inputUserChange(e)}}/>
+            <h4>匹配元字符 {` 张三:010-12011012 , 李四：020-11012011`.match(/[^-\d:：,\s]/g)}  </h4>
+            <h4>匹配email {`1184405532@qq.com`.match(/^\w+@\w+\.\w+$/)}  </h4>
+            <h4>替换d并且不区分大小写为你想要的字符 {`abcdDefgDDd`.replace(/d/gi,'z')}  </h4>
+            <h4>匹配多行字符并转换为对象结构   {JSON.stringify(manyString())}</h4>
+            <h4>匹配日期2020-10-05或者2020/10/05    结果：{regDate()}</h4>
         </div>
     )
 }
