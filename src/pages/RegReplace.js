@@ -133,6 +133,34 @@ function RegReplace() {
 		`
 		return str.replace(/遮天/g,`<a href="//book.qidian.com/info/1735921"  target="_blank">$&</a>`)
 	}
+	function regCon(){
+		let str = `
+			<h4>遮天</h4>
+			<h4>我从凡间来</h4>
+			<h4>圣墟</h4>
+		`
+		return str.replace(/<(h[1-6])>(?<con>.*?)<\/(h[1-6])>/g,`<h2>$<con><h2>`)
+	}
+	function assertionMatching(){
+		let str = `
+			今天我吃了饭，今天我没吃饭，今天不想吃饭。
+		`
+		return str.replace(/今天(?=不)/g,`<h1>$&<h1>`)
+	}
+	function userPhoneNumber(){
+		let str = `
+			陈禹廷：18584084806
+			陈禹廷：18584084806
+		`
+		return str = str.replace(/(?<=\d{7})\d{4}/ig,(v)=>{return '*'.repeat(4)})
+	}
+	function userkeyword(){
+		//let reg  = new RegExp(`/^(?!.*${str}.*)/`,'i')
+		let regs = /^(?!.*陈禹廷.*)[\s\S]{5,6}$/i
+		let str = '陈2禹2廷'
+		console.log(str.match(regs))
+		return str.match(regs)
+	}
 	return (
 		<div>
 			<h4>输入检测的字符或者正则高亮显示匹配</h4>
@@ -154,7 +182,10 @@ function RegReplace() {
 			<h4>抓取字符串中的域名    结果：{urls()}</h4>
 			<h4>禁止贪婪，并替换标签 结果：<span dangerouslySetInnerHTML={{ __html: replaceLabel() }}></span></h4>
 			<h4>使用macthAll进行全局匹配 结果：{matchAllStr()}</h4>
-			<h4>使用$&进行匹配结果替换：<span dangerouslySetInnerHTML={{ __html: replace$and() }}></span></h4>
+			<h4>给原子组取别名：{regCon()}</h4>
+			<h4>给断言条件匹配今天后面=不的替换：{assertionMatching()}</h4>
+			<h4>给断言条件匹配前面是七位数字的后面四位替换为星号：{userPhoneNumber()}</h4>
+			<h4>限制用户名不能出现的字符：{userkeyword('陈禹廷','555')}</h4>
 		</div>
 	)
 }
